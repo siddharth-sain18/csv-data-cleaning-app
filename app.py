@@ -6,40 +6,85 @@ import matplotlib.pyplot as plt
 st.set_page_config(page_title="AI/ML PROJECT-1", page_icon="📊", layout="wide")
 
 st.markdown("""
-    <style>
-    /* Main Background and Card Style */
-    .stApp {
-        background-color: #f8f9fa;
-    }
-    div[data-testid="stVerticalBlock"] > div:has(div.stDataFrame) {
-        background-color: #ffffff;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-        margin-bottom: 20px;
-    }
-    /* Title styling */
-    h1 {
-        color: #1e3a8a;
-        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-        font-weight: 700;
-    }
-    h2, h3 {
-        color: #2c3e50;
-    }
-    /* Sidebar Styling */
-    section[data-testid="stSidebar"] {
-        background-color: #0f172a !important;
-    }
-    section[data-testid="stSidebar"] .stMarkdown h1, 
-    section[data-testid="stSidebar"] p, 
-    section[data-testid="stSidebar"] label {
-        color: #f8fafc !important;
-    }
-    </style>
-""", unsafe_allow_html=True)
+<style>
+            
+.stApp{
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+            
+div[data-testid="stVerticalBlock"] > div:has(div.stDataFrame){
+    background-color: var(--secondary-background-color);
+    color: var(--text-color);
+    padding:20px;
+    border-radius:12px;
+    box-shadow:0 4px 10px rgba(0,0,0,0.15);
+    margin-bottom:20px;
+}
 
-# Global initialization: Define numeric_col after df is loaded to prevent NameError
+h1{
+    color: var(--text-color);
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight:700;
+}
+
+h2,h3,h4,h5,h6{
+    color: var(--text-color);
+}
+
+section[data-testid="stSidebar"]{
+    background-color:#0f172a !important;
+}
+
+section[data-testid="stSidebar"] *{
+    color:#f8fafc !important;
+}
+
+.stMarkdown,
+.stText,
+.stDataFrame,
+.stTable,
+label,
+p,
+span,
+div{
+    color: inherit !important;
+}
+
+[data-testid="stMetricLabel"],
+[data-testid="stMetricValue"]{
+    color: inherit !important;
+}
+
+.stSelectbox label{
+    color: inherit !important;
+}
+
+[data-testid="stFileUploader"] label{
+    color: inherit !important;
+}
+
+[data-testid="stDataFrame"]{
+    color: inherit !important;
+}
+
+button[data-baseweb="tab"]{
+    color: inherit !important;
+    font-weight:600;
+}
+
+.stButton>button,
+.stDownloadButton>button{
+    border-radius:8px;
+    width:100%;
+}
+
+[data-testid="stAlert"]{
+    border-radius:10px;
+}
+
+</style>
+""", unsafe_allow_html=True)
 numeric_col = []
 
 def scatter(df):
@@ -135,7 +180,6 @@ def showdupl(df):
     else:
         st.warning("Select at least one column")
 
-# --- MAIN APP LAYOUT ---
 st.title("📊 CSV DATA CLEANING APPLICATION")
 st.markdown("Upload your datasets, clean missing entries, eliminate duplicates, and visualize instantly.")
 
@@ -149,14 +193,12 @@ if uploadedFile is not None:
         st.stop()
     numeric_col=df.select_dtypes(include=np.number).columns
     
-    # Organizing Layout with Tabs for a neat dashboard look
     tab1, tab2 = st.tabs(["📋 Dataset Overview", "📈 Data Visualization"])
     
     with tab1:
         st.header("Current Dataset Status")
         st.dataframe(df, use_container_width=True)
         
-        # Professional Metric Display
         m1, m2 = st.columns(2)
         with m1:
             st.metric(label="Original Dimensions (Rows × Columns)", value=f"{df.shape[0]} × {df.shape[1]}")
@@ -192,8 +234,7 @@ if uploadedFile is not None:
                df=dropdupl(df)
             case "SHOW THE DUPLICATE ROWS":
                 showdupl(df)
-        
-        # --- ADD-ON: EXPORT/DOWNLOAD BUTTON ---
+
         st.markdown("---")
         st.subheader("📥 Export Cleaned Dataset")
         csv_data = df.to_csv(index=False).encode('utf-8')
@@ -212,7 +253,7 @@ if uploadedFile is not None:
             plotselection=st.sidebar.selectbox("SELECT TYPE OF PLOT: ",["-- Select an option --","SCATTER PLOT","BAR PLOT","LINE PLOT","HISTOGRAM"],index=0)
             
             if plotselection != "-- Select an option --":
-                # Wrapped inside a clean visual container
+               
                 with st.container():
                     st.markdown(f"### Visualizing: {plotselection}")
                     match plotselection:
